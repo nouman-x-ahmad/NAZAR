@@ -1,0 +1,3 @@
+//nazar app
+modules
+implementation of login and registeration and profile management
