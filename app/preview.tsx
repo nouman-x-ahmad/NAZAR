@@ -41,7 +41,7 @@ const PhotoPreviewSection: React.FC<PhotoPreviewSectionProps> = ({ photo, handle
       const fileBase64 = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
 
       // Send the base64 string to the Flask server
-      const response = await fetch('http://192.168.218.37:5000/process-image', {
+      const response = await fetch('http://192.168.1.192:5000/process-image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,3 +135,5 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoPreviewSection;
+
+

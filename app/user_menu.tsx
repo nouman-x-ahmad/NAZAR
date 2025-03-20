@@ -37,19 +37,14 @@ export default function user_menu() {
               map
       </Link>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
       <Link href="/gallery" style={
         styles.buttonText
       }>
-              map
+              gallery
       </Link>
       </TouchableOpacity>
-      <TouchableOpacity>
-      navigation.navigate('gallery');
-        <style>
-          styles.buttonText
-        </style>
-      </TouchableOpacity>
+      
     </View>
   );
 }

@@ -3,13 +3,15 @@ import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Preview from './preview';
+import CropScreen from './cropscreen'; // Import the cropping screen
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState<any>(null);
-  const [torchEnabled, setTorchEnabled] = useState(false); // Add torch state
-  
+  const [torchEnabled, setTorchEnabled] = useState(false);
+  const [cropping, setCropping] = useState(false);
+
   const cameraRef = useRef<CameraView | null>(null);
 
   if (!permission) {
@@ -25,13 +27,8 @@ export default function Camera() {
     );
   }
 
-  const toggleTorch = () => {
-    setTorchEnabled(current => !current);
-  };
-
-  const toggleCameraFacing = () => {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
-  };
+  const toggleTorch = () => setTorchEnabled(current => !current);
+  const toggleCameraFacing = () => setFacing(current => (current === 'back' ? 'front' : 'back'));
 
   const handleTakePhoto = async () => {
     if (cameraRef.current) {
@@ -40,15 +37,30 @@ export default function Camera() {
         base64: true,
         exif: false,
       };
-      const takedPhoto = await cameraRef.current.takePictureAsync(options);
-      console.log('Photo taken:', takedPhoto);
-      setPhoto(takedPhoto);
+      const takenPhoto = await cameraRef.current.takePictureAsync(options);
+      console.log('Photo taken:', takenPhoto);
+      setPhoto(takenPhoto);
+      setCropping(true);
     }
   };
 
-  const handleRetakePhoto = () => setPhoto(null);
+  const handleCropPhoto = (croppedImage: any) => {
+    setPhoto(croppedImage);
+    setCropping(false);
+  };
 
-  if (photo) return <Preview photo={photo} handleRetakePhoto={handleRetakePhoto} />;
+  const handleRetakePhoto = () => {
+    setPhoto(null);
+    setCropping(false);
+  };
+
+  if (cropping && photo) {
+    return <CropScreen photo={photo} onCrop={handleCropPhoto} onCancel={handleRetakePhoto} />;
+  }
+
+  if (photo) {
+    return <Preview photo={photo} handleRetakePhoto={handleRetakePhoto} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -56,8 +68,8 @@ export default function Camera() {
         style={styles.camera}
         facing={facing}
         ref={cameraRef}
-        flash={torchEnabled ? 'on' : 'off'} 
-        enableTorch={torchEnabled} // Use torch state for flash
+        flash={torchEnabled ? 'on' : 'off'}
+        enableTorch={torchEnabled}
       >
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
