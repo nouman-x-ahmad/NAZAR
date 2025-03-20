@@ -44,12 +44,7 @@ export default function user_menu() {
               map
       </Link>
       </TouchableOpacity>
-      <TouchableOpacity>
-      navigation.navigate('gallery');
-        <style>
-          styles.buttonText
-        </style>
-      </TouchableOpacity>
+   
     </View>
   );
 }
