@@ -1,3 +1,7 @@
 //nazar app
-modules
-implementation of login and registeration and profile management
+camera
+gallery
+flask api
+map
+login
+registeration
